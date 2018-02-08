@@ -10,73 +10,36 @@ var numberCoachesRange = sheet.getRange(2, 7, 1, 8); // select the row containin
 var coachRange = sheet.getRange(4, 1, 13, 5); //selet the range where coach names and email address is placed
 var reminderStatusRange = sheet.getRange(50, 7, 1, 8); // select the row containing the information if the reminder for the dojo has been sent
 
-function sendAnswerReminder(coachName, coachEmail, dojoDate, numberCoaches) {
-  var subject = "[CoderDojo Norrköping] Påminnelse";
-  
-  var message = "Hej " + coachName + "!" + "\n" + "\n";
-  message += "Nu på lördag (" + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + ") är det dags för CoderDojo igen och vi saknar ditt svar på anmälingslistan för coacher. ";
-  message += "För tillfället är vi " + numberCoaches + " coacher som är anmälda, men vi skulle behöva fler som kan vara med.\n";
+function getAnswerReminderMessage(coachName, dojoDate, numberCoaches) {
+  var message = "";
+  message += "Nu på lördag (" + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + ") är det dags för CoderDojo igen och och det skulle vara jätteroligt att ha med dig som coach! ";
+  message += "För tillfället är vi " + numberCoaches + " coacher som är anmälda, men vi skulle behöva fler som kan vara med. \n";
   message += "Vänligen gå in på " + link + " och ange 'y' om du är med som coach eller 'n' om du inte vill vara med. Vi behöver ditt svar senast onsdag kl. 17."+ "\n" + "\n";
-
   
-  message += "Hälsningar," + "\n";
-  message += "CoderDojo Norrköping" + "\n" + "\n";
-  
-  message += "Du får detta mejl eftersom du är registrerad som coach. Vill du inte få påminnelser i framtiden skriver du 'n' i kolumnen 'Påminn?' efter ditt namn.\n";
-  
-  MailApp.sendEmail(coachEmail, subject, message);
-  
-  Logger.log("Reminder sent to " + coachEmail);
+  return message;
 }
 
-function sendParticipationReminder(coachName, coachEmail, dojoDate, numberCoaches) {
-  var subject = "[CoderDojo Norrköping] Påminnelse";
-  
-  var message = "Hej " + coachName + "!" + "\n" + "\n";
+function getParticipationReminderMessage(coachName, dojoDate, numberCoaches) {
+  var message = "";
   message += "Vi är glada att du är med som coach på dojon imorgon!";
   message += "Vi kommer totalt att vara " + numberCoaches + " coacher.\n\n";
-  message += "Några saker att tänka på:\n";
-  message += "* Vi träffas vid entrén till Demola/Coffice (om inget annat har angetts i anmälningslistan), adressen är Laxholmstorget 3\n"
-  message += "* Coacherna träffas 10.30, det är viktigt att komma i tid så att vi kan förbereda och släppa in deltagarna i tid\n"
-  message += "* Skulle du få förhinder är det jätteviktigt att meddela via Facebook eller till nils@coderdojonkpg.se omedelbart så att vi kan försöka hitta en ersättare eller begränsa platserna! \n"
-
-  message += ""+ "\n" + "\n";
   
-  message += "Hälsningar," + "\n";
-  message += "CoderDojo Norrköping" + "\n" + "\n";
-  
-  message += "Du får detta mejl eftersom du är registrerad som coach. Vill du inte få påminnelser i framtiden skriver du 'n' i kolumnen 'Påminn?' efter ditt namn.\n";
-  
-  MailApp.sendEmail(coachEmail, subject, message);
-  
-  Logger.log("Reminder sent to " + coachEmail);
+  return message;
 }
 
-function sendEarlyRegistrationReminder(coachName, coachEmail, dojoDate, numberCoaches) {
-  var subject = "[CoderDojo Norrköping] Påminnelse";
+function getEarlyRegistrationReminderMessage(coachName, dojoDate, numberCoaches) {
+  var message = "";
+  message += "Vi är glada att du har anmält dig som coach till dojon den " + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + "! ";
+  message += "Eftersom vi har fått din anmälan mer än en vecka i förväg vill vi be dig att dubbelkolla om du fortfarande kan delta. ";
+  message += "Vänligen kontrollera ditt svar i anmälningslistan senast onsdag kl. 17! \n";
+  message += "Vi ser fram emot att se dig på dojon!\n";
   
-  var message = "Hej " + coachName + "!" + "\n" + "\n";
-  message += "Vi är glada att du har anmält dig som coach till dojon den " + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + "!";
-  message += "Eftersom vi har fått din anmälan mer än en vecka i förväg vill vi be dig att dubbelkolla om du fortfarande kan delta.";
-  message += "Vänligen kontrollera ditt svar i anmälningslistan senast onsdag kl. 17 på " + link + "\n";
-  message += "Vi ser fram emot att se dig på dojon!\n"
-  
-
-  message += ""+ "\n" + "\n";
-  
-  message += "Hälsningar," + "\n";
-  message += "CoderDojo Norrköping" + "\n" + "\n";
-  
-  message += "Du får detta mejl eftersom du är registrerad som coach. Vill du inte få påminnelser i framtiden skriver du 'n' i kolumnen 'Påminn?' efter ditt namn.\n";
-  
-  MailApp.sendEmail(coachEmail, subject, message);
-  
-  Logger.log("Reminder sent to " + coachEmail);
+  return message;
 }
 
 var reminders = [
   {
-    daysBefore: 7,
+    daysBefore: 9,
     name: "Early registration reminder",
     checkCondition: function (coachNumber, dojoNumber) {
       if (coachData[coachNumber][0] != "" && coachData[coachNumber][4] == "y" && participationData[coachNumber][dojoNumber] == "y") {
@@ -84,7 +47,8 @@ var reminders = [
         return true;
       }
     },
-    sendReminder: sendEarlyRegistrationReminder
+    getMessage: getEarlyRegistrationReminderMessage,
+    messageTitle: "Vad roligt att du är med!"
   },
   {
     daysBefore: 5,
@@ -99,7 +63,8 @@ var reminders = [
         return true; 
       }
     },
-    sendReminder: sendAnswerReminder
+    getMessage: getAnswerReminderMessage,
+    messageTitle: "Snart är det CoderDojo igen..."
   },
   {
     daysBefore: 4,
@@ -114,7 +79,8 @@ var reminders = [
         return true; 
       }
     },
-    sendReminder: sendAnswerReminder
+    getMessage: getAnswerReminderMessage,
+    messageTitle: "Vi saknar dig..."
   },  
   {
     daysBefore: 3,
@@ -129,7 +95,8 @@ var reminders = [
         return true; 
       }
     },
-    sendReminder: sendAnswerReminder
+    getMessage: getAnswerReminderMessage,
+    messageTitle: "Vi behöver dig..."
   },
   {
     daysBefore: 1,
@@ -140,7 +107,8 @@ var reminders = [
         return true;
       }
     },
-    sendReminder: sendParticipationReminder
+    getMessage: getParticipationReminderMessage,
+    messageTitle: "Vi ses imorgon!"
   }
 ]
 
@@ -192,7 +160,13 @@ function sendReminder(reminder, dojoNumber, dojoDate) {  //Sends out a specific 
   for (var i = 0; i < participationData.length; i++) {
     try {
       if (reminder.checkCondition(i,dojoNumber)) {
-        reminder.sendReminder(coachData[i][0], coachData[i][1], dojoDate, numberCoachesData[0][dojoNumber]);
+        var recipient = coachData[i][1];
+        var recipientName = coachData[i][0];
+        var message = reminder.getMessage(coachData[i][0], dojoDate, numberCoachesData[0][dojoNumber]);
+        var daysLeft = getNumberOfDaysBetween(new Date(), new Date(dojoDate.getTime()));
+ 
+        sendMail("mail@nilsbreyer.eu", recipientName, reminder.messageTitle, message, daysLeft, link);
+        
         namesSent += coachData[i][0] + "\n";
         Logger.log(reminder.name + " sent for " + coachData[i][0]);
       }
@@ -208,3 +182,22 @@ function sendReminder(reminder, dojoNumber, dojoDate) {  //Sends out a specific 
   }
 }
 
+
+function sendMail(recipient, recipientName, messageTitle, message, daysLeft, registrationUrl) {
+  var template = HtmlService.createTemplateFromFile('mailTemplate');
+  template.recipientName = recipientName;
+  template.messageTitle = messageTitle;
+  template.message = message;
+  template.daysLeft = daysLeft;
+  template.registrationUrl = registrationUrl;
+  var htmlBody = template.evaluate().getContent();
+  
+  var text = "Hej " + recipientName + "!" + "\n" + "\n";
+  text += message;
+  text += ""+ "\n" + "\n";
+  text += "Hälsningar," + "\n";
+  text += "CoderDojo Norrköping" + "\n" + "\n";
+  
+  MailApp.sendEmail(recipient, "Påminnelse från CoderDojo Norrköping", text, {htmlBody: htmlBody});
+  Logger.log("Reminder sent to " + recipient);
+}

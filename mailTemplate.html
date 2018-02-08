@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.8">
+	<link rel="stylesheet" type="text/css" href="http://coderdojonkpg.se/style.css"/>
+	<title>CoderDojo Norrköping</title>
+    
+<!--Mail specific styles -->
+    <style>
+div#cover {
+    height:400px;
+}
+section#intro {
+    text-shadow:none;
+}
+    
+.circle {
+    margin-top: -130px;
+    margin-left:auto;
+    margin-right:auto;
+	background-color: #C7E2DA; /* extra light */
+    
+	transform: translateZ(1000px);
+	transform-style: preserve-3d;
+    
+    border-radius: 50%;
+	width: 260px;
+    height: 260px;
+}
+
+.circle div {
+    max-width: 60%;
+    margin: auto;
+}
+
+div.large {
+    font-size: 74pt;
+}
+
+header {
+    padding-bottom: 0;
+}
+
+@media screen and (max-width:800px) { 
+img#logo{
+   height:auto;
+    max-width:80%;
+    
+}
+
+body{
+   font-size:0.95em;
+}
+}
+    </style>
+  </head>
+  <body>
+<header cd-include="nav.html"> <!--nav.html is included by script, change in nav.html to change menu-->
+	<a href="http://coderdojonkpg.se/index.html"><img src="http://coderdojonkpg.se/img/icon/logowithtext.png" id="logo"/></a>
+</header>
+  <section id="main">
+    <div style="background-image: url(http://coderdojonkpg.se/img/klassrum.jpg);" id="cover">	</div>
+    
+      <section id="intro">
+			<div class="circle"><div class="large"><?= daysLeft ?></div><div>dag<? if(daysLeft > 1) { ?>ar<? } ?> kvar till nästa dojo</div></div>
+     </section>
+     <h1>Hej <?= recipientName ?>!</h1>
+     <section class="blocks">
+         <article>
+            <h2><?= messageTitle ?></h2>
+            
+            <p>
+                <?= message ?>
+            </p>
+            <div class="buttons">
+				<a href="<?= registrationUrl ?>" class="button">Gå till anmälan för coacher</a>
+			</div>
+            <p>
+                Bästa hälsningar,<br/>
+                CoderDojo Norrköping
+            </p>
+         </article>
+     </section>
+
+     <br/>
+     <section class="blocks">
+        <article>
+            <h2>Viktig info om dojon</h2>
+
+            <ul>
+                <li>Vi träffas vid entrén till Demola/Coffice (om inget annat har angetts i anmälningslistan), adressen är Laxholmstorget 3</li>
+                <li>Coacherna träffas <b>10:20</b>, det är viktigt att komma i tid så att vi kan förbereda och släppa in deltagarna i tid</li>
+                <li>Skulle du få förhinder är det jätteviktigt att meddela via Facebook eller till nils@coderdojonkpg.se omedelbart så att vi kan försöka hitta en ersättare eller begränsa platserna!</li>
+            </ul>
+        </article>
+     </section>
+
+     <br/><br/><br/><br/>
+     <center>
+         <span class="comment">Tack för att du är med!</span><br/>
+         <img src="http://coderdojonkpg.se/img/mascot/coderfox.png" class="mascot"/>
+     </center>
+
+     <footer>
+        <article>
+                <h3>Har du frågor?</h3>
+                <p>
+                    <a href="mailto:info@coderdojonkpg.se" class="button"><span class="socicon socicon-mail"/> info@coderdojonkpg.se</a>
+                </p>
+        </article>
+        <article>
+                <h3>Vi finns även på</h3>
+                    <a href="https://www.facebook.com/CoderDojoNkpg/" class="button"><span class="socicon socicon-facebook"></span></a>
+                    <a href="https://twitter.com/CoderDojoNKPG" class="button"><span class="socicon socicon-twitter"></span></a>
+                    <a href="https://www.instagram.com/coderdojonkpg/" class="button"><span class="socicon socicon-instagram"></span></a>
+        </article>
+        <article>
+            Du får denna påminnelse eftersom du är registrerad som coach. Vill du inte få påminnelser i framtiden skriver du 'n' i kolumnen 'Påminn?' efter ditt namn.
+        </article>
+    </footer>
+  </section>
+  </body>
+</html>
+
+
+
