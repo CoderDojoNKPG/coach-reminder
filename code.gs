@@ -7,8 +7,12 @@ var link = spreadsheet.getUrl();
 var participationRange = sheet.getRange(4, 7, 13, 8); // select the range where participants answer yes/no
 var dateRange = sheet.getRange(1, 7, 1, 8); // select the row containing the dojo dates
 var numberCoachesRange = sheet.getRange(2, 7, 1, 8); // select the row containing the number of coaches per dojo
-var coachRange = sheet.getRange(4, 1, 13, 5); //selet the range where coach names and email address is placed
+var coachRange = sheet.getRange(4, 1, 13, 5); //select the range where coach names and email address is placed
 var reminderStatusRange = sheet.getRange(50, 7, 1, 8); // select the row containing the information if the reminder for the dojo has been sent
+
+var badgeCodes = {
+  "firstDojo": "dojo1"
+};
 
 function getAnswerReminderMessage(coachName, dojoDate, numberCoaches) {
   var message = "";
@@ -37,9 +41,19 @@ function getEarlyRegistrationReminderMessage(coachName, dojoDate, numberCoaches)
   return message;
 }
 
+function getBadgeMessage(coachName, dojoDate, numberCoaches) {
+  var message = "";
+  message += "Vi hoppas att du har haft kul på dojon idag! \n";
+  message += "Vi tackar för ditt engagement och tycker du har väl förtjänat dig en badge för det. \n";
+  message += "Hämta din badge genom att använda koden nedan med hjälp av Badgecraft eller Badge Wallet appen. \n";
+
+  return message;
+}
+
+
 var reminders = [
   {
-    daysBefore: 9,
+    daysBefore: 7,
     name: "Early registration reminder",
     checkCondition: function (coachNumber, dojoNumber) {
       if (coachData[coachNumber][0] != "" && coachData[coachNumber][4] == "y" && participationData[coachNumber][dojoNumber] == "y") {
@@ -47,7 +61,9 @@ var reminders = [
         return true;
       }
     },
+    template: "reminderTemplate",
     getMessage: getEarlyRegistrationReminderMessage,
+    getData: getDojoData,
     messageTitle: "Vad roligt att du är med!"
   },
   {
@@ -63,7 +79,9 @@ var reminders = [
         return true; 
       }
     },
+    template: "reminderTemplate",
     getMessage: getAnswerReminderMessage,
+    getData: getDojoData,
     messageTitle: "Snart är det CoderDojo igen..."
   },
   {
@@ -79,7 +97,9 @@ var reminders = [
         return true; 
       }
     },
+    template: "reminderTemplate",
     getMessage: getAnswerReminderMessage,
+    getData: getDojoData,
     messageTitle: "Vi saknar dig..."
   },  
   {
@@ -95,7 +115,9 @@ var reminders = [
         return true; 
       }
     },
+    template: "reminderTemplate",
     getMessage: getAnswerReminderMessage,
+    getData: getDojoData,
     messageTitle: "Vi behöver dig..."
   },
   {
@@ -107,11 +129,30 @@ var reminders = [
         return true;
       }
     },
+    template: "reminderTemplate",
     getMessage: getParticipationReminderMessage,
+    getData: getDojoData,
     messageTitle: "Vi ses imorgon!"
+  },
+  {
+    daysBefore: 8,
+    name: "First dojo badge",
+    checkCondition: function (coachNumber, dojoNumber) {
+      if (coachData[coachNumber][0] != "" && participationData[coachNumber][dojoNumber] == "y") {
+        var participationCount = 0;
+        for (var i = 0; i <= dojoNumber; i++) {
+          if (participationData[coachNumber][i] == "y") participationCount++;
+        }
+        //coach exists and attended first dojo
+        return participationCount == 1;
+      }
+    },
+    template: "badgeTemplate",
+    getMessage: getBadgeMessage,
+    getData: function(){return {"badgeCode": badgeCodes["firstDojo"]}},
+    messageTitle: "Du har varit med på din första dojo under terminen!"
   }
 ]
-
 
 
 
@@ -122,6 +163,14 @@ var reminders = [
 var participationData = participationRange.getValues();
 var coachData = coachRange.getValues();
 var numberCoachesData = numberCoachesRange.getValues();
+
+function getDojoData(dojoNumber, dojoDate, coachNumber) {
+  var data = {
+              "daysLeft": getNumberOfDaysBetween(new Date(), new Date(dojoDate.getTime())),
+              "registrationUrl": link
+             };
+  return data;
+}
 
 function getNumberOfDaysBetween(date1, date2) {
   var oneDay = 24*60*60*1000;
@@ -163,9 +212,9 @@ function sendReminder(reminder, dojoNumber, dojoDate) {  //Sends out a specific 
         var recipient = coachData[i][1];
         var recipientName = coachData[i][0];
         var message = reminder.getMessage(coachData[i][0], dojoDate, numberCoachesData[0][dojoNumber]);
-        var daysLeft = getNumberOfDaysBetween(new Date(), new Date(dojoDate.getTime()));
- 
-        sendMail("mail@nilsbreyer.eu", recipientName, reminder.messageTitle, message, daysLeft, link);
+        var data = reminder.getData(dojoNumber, dojoDate, i);
+
+        sendMail(recipient, recipientName, reminder.messageTitle, message, reminder.template, data);
         
         namesSent += coachData[i][0] + "\n";
         Logger.log(reminder.name + " sent for " + coachData[i][0]);
@@ -183,13 +232,12 @@ function sendReminder(reminder, dojoNumber, dojoDate) {  //Sends out a specific 
 }
 
 
-function sendMail(recipient, recipientName, messageTitle, message, daysLeft, registrationUrl) {
-  var template = HtmlService.createTemplateFromFile('mailTemplate');
-  template.recipientName = recipientName;
-  template.messageTitle = messageTitle;
+function sendMail(recipient, recipientName, messageTitle, message, template, data) {
+  var template = HtmlService.createTemplateFromFile(template);
+  template.data = data;
   template.message = message;
-  template.daysLeft = daysLeft;
-  template.registrationUrl = registrationUrl;
+  template.messageTitle = messageTitle;
+  template.recipientName = recipientName;
   var htmlBody = template.evaluate().getContent();
   
   var text = "Hej " + recipientName + "!" + "\n" + "\n";

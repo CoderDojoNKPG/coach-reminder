@@ -10,7 +10,7 @@
 <!--Mail specific styles -->
     <style>
 div#cover {
-    height:400px;
+    height:300px;
 }
 section#intro {
     text-shadow:none;
@@ -26,8 +26,8 @@ section#intro {
 	transform-style: preserve-3d;
     
     border-radius: 50%;
-	width: 260px;
-    height: 260px;
+	width: 250px;
+    height: 250px;
 }
 
 .circle div {
@@ -36,23 +36,40 @@ section#intro {
 }
 
 div.large {
-    font-size: 74pt;
+    font-size: 72pt;
+    line-height: 1.4;
+    font-style: normal;
 }
 
 header {
     padding-bottom: 0;
 }
 
+header a {
+    font-size: 1em;
+}
+
 @media screen and (max-width:800px) { 
 img#logo{
-   height:auto;
-    max-width:80%;
-    
+    height:auto;
+    max-width:60%;
 }
 
 body{
-   font-size:0.95em;
+   font-size:0.94em;
+   padding: 0;
 }
+
+.circle {
+    width: 200px;
+    height: 200px;
+}
+
+div.large {
+    font-size: 58pt;
+    line-height: 1.2;
+}
+
 }
     </style>
   </head>
@@ -64,8 +81,9 @@ body{
     <div style="background-image: url(http://coderdojonkpg.se/img/klassrum.jpg);" id="cover">	</div>
     
       <section id="intro">
-			<div class="circle"><div class="large"><?= daysLeft ?></div><div>dag<? if(daysLeft > 1) { ?>ar<? } ?> kvar till nästa dojo</div></div>
+			<div class="circle"><div class="large"><?= data["daysLeft"] ?></div><div>dag<? if(data["daysLeft"] > 1) { ?>ar<? } ?> kvar till nästa dojo</div></div>
      </section>
+     
      <h1>Hej <?= recipientName ?>!</h1>
      <section class="blocks">
          <article>
@@ -75,7 +93,7 @@ body{
                 <?= message ?>
             </p>
             <div class="buttons">
-				<a href="<?= registrationUrl ?>" class="button">Gå till anmälan för coacher</a>
+				<a href="<?= data["registrationUrl"] ?>" class="button">Gå till anmälan för coacher</a>
 			</div>
             <p>
                 Bästa hälsningar,<br/>
@@ -99,7 +117,7 @@ body{
 
      <br/><br/><br/><br/>
      <center>
-         <span class="comment">Tack för att du är med!</span><br/>
+         <span class="comment">Tack för att du är coach 👏</span><br/>
          <img src="http://coderdojonkpg.se/img/mascot/coderfox.png" class="mascot"/>
      </center>
 
