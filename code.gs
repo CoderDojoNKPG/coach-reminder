@@ -10,6 +10,8 @@ var numberCoachesRange = sheet.getRange(2, 7, 1, 8); // select the row containin
 var coachRange = sheet.getRange(4, 1, 13, 5); //select the range where coach names and email address is placed
 var reminderStatusRange = sheet.getRange(50, 7, 1, 8); // select the row containing the information if the reminder for the dojo has been sent
 
+var operatorEmail = "mail@nilsbreyer.eu"; //This email adress will be notified about errors
+
 var badgeCodes = {
   "firstDojo": "dojo1"
 };
@@ -135,7 +137,7 @@ var reminders = [
     messageTitle: "Vi ses imorgon!"
   },
   {
-    daysBefore: 8,
+    daysBefore: 0,
     name: "First dojo badge",
     checkCondition: function (coachNumber, dojoNumber) {
       if (coachData[coachNumber][0] != "" && participationData[coachNumber][dojoNumber] == "y") {
@@ -143,7 +145,7 @@ var reminders = [
         for (var i = 0; i <= dojoNumber; i++) {
           if (participationData[coachNumber][i] == "y") participationCount++;
         }
-        //coach exists and attended first dojo
+        //coach exists and just attended first dojo
         return participationCount == 1;
       }
     },
@@ -227,7 +229,7 @@ function sendReminder(reminder, dojoNumber, dojoDate) {  //Sends out a specific 
   }
   
   if (namesSent != "") {
-    MailApp.sendEmail("mail@nilsbreyer.eu", "[CoderDojo Norrköping] " + reminder.name + " sent", namesSent);
+    MailApp.sendEmail(operatorEmail, "[CoderDojo Norrköping] " + reminder.name + " sent", namesSent);
   }
 }
 
@@ -246,6 +248,6 @@ function sendMail(recipient, recipientName, messageTitle, message, template, dat
   text += "Hälsningar," + "\n";
   text += "CoderDojo Norrköping" + "\n" + "\n";
   
-  MailApp.sendEmail(recipient, "Påminnelse från CoderDojo Norrköping", text, {htmlBody: htmlBody});
+  MailApp.sendEmail(recipient, messageTitle + "- Meddelanade från CoderDojo Norrköping", text, {htmlBody: htmlBody});
   Logger.log("Reminder sent to " + recipient);
 }
