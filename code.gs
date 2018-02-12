@@ -19,8 +19,8 @@ var badgeCodes = {
 function getAnswerReminderMessage(coachName, dojoDate, numberCoaches) {
   var message = "";
   message += "Nu på lördag (" + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + ") är det dags för CoderDojo igen och och det skulle vara jätteroligt att ha med dig som coach! ";
-  message += "För tillfället är vi " + numberCoaches + " coacher som är anmälda, men vi skulle behöva fler som kan vara med. \n";
-  message += "Vänligen gå in på " + link + " och ange 'y' om du är med som coach eller 'n' om du inte vill vara med. Vi behöver ditt svar senast onsdag kl. 17."+ "\n" + "\n";
+  message += "För tillfället är vi " + numberCoaches + " coacher som är anmälda och vi skulle behöva fler som kan vara med. \n";
+  message += "Om du kan vara med skriver du 'y' i anmälan och om du inte kan vara med skriver du 'n'. Vi behöver ditt svar senast onsdag kl. 17."+ "\n" + "\n";
   
   return message;
 }
@@ -29,7 +29,7 @@ function getParticipationReminderMessage(coachName, dojoDate, numberCoaches) {
   var message = "";
   message += "Vi är glada att du är med som coach på dojon imorgon!";
   message += "Vi kommer totalt att vara " + numberCoaches + " coacher.\n\n";
-  
+
   return message;
 }
 
@@ -248,6 +248,6 @@ function sendMail(recipient, recipientName, messageTitle, message, template, dat
   text += "Hälsningar," + "\n";
   text += "CoderDojo Norrköping" + "\n" + "\n";
   
-  MailApp.sendEmail(recipient, messageTitle + "- Meddelanade från CoderDojo Norrköping", text, {htmlBody: htmlBody});
+  MailApp.sendEmail(recipient, messageTitle + " - Meddelanade från CoderDojo Norrköping", text, {htmlBody: htmlBody});
   Logger.log("Reminder sent to " + recipient);
 }
