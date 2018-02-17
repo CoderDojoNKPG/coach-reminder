@@ -13,7 +13,7 @@ var reminderStatusRange = sheet.getRange(50, 7, 1, 8); // select the row contain
 var operatorEmail = "mail@nilsbreyer.eu"; //This email adress will be notified about errors
 
 var badgeCodes = {
-  "firstDojo": "dojo1"
+
 };
 
 function getAnswerReminderMessage(coachName, dojoDate, numberCoaches) {
@@ -58,7 +58,7 @@ var reminders = [
     daysBefore: 7,
     name: "Early registration reminder",
     checkCondition: function (coachNumber, dojoNumber) {
-      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4] == "y" && participationData[coachNumber][dojoNumber] == "y") {
+      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4].toLowerCase().indexOf("y") >= 0 && participationData[coachNumber][dojoNumber].toLowerCase().indexOf("y") >= 0) {
         //coach exists, wants to be reminded and has signed up for dojo
         return true;
       }
@@ -76,7 +76,7 @@ var reminders = [
         //don't send if already enough coaches
         return false;
       }
-      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4] == "y" && participationData[coachNumber][dojoNumber] == "") {
+      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4].toLowerCase().indexOf("y") >= 0 && participationData[coachNumber][dojoNumber] == "") {
         //coach exists, wants to be reminded and has not answered yet
         return true; 
       }
@@ -94,7 +94,7 @@ var reminders = [
         //don't send if already enough coaches
         return false;
       }
-      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4] == "y" && participationData[coachNumber][dojoNumber] == "") {
+      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4].toLowerCase().indexOf("y") >= 0 && participationData[coachNumber][dojoNumber] == "") {
         //coach exists, wants to be reminded and has not answered yet
         return true; 
       }
@@ -112,7 +112,7 @@ var reminders = [
         //don't send if already enough coaches
         return false;
       }
-      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4] == "y" && participationData[coachNumber][dojoNumber] == "") {
+      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4].toLowerCase().indexOf("y") >= 0 && participationData[coachNumber][dojoNumber] == "") {
         //coach exists, wants to be reminded and has not answered yet
         return true; 
       }
@@ -126,7 +126,7 @@ var reminders = [
     daysBefore: 1,
     name: "Participation reminder",
     checkCondition: function (coachNumber, dojoNumber) {
-      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4] == "y" && participationData[coachNumber][dojoNumber] == "y") {
+      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4].toLowerCase().indexOf("y") >= 0 && participationData[coachNumber][dojoNumber].toLowerCase().indexOf("y") >= 0) {
         //coach exists, wants to be reminded and has signed up for dojo
         return true;
       }
@@ -140,10 +140,10 @@ var reminders = [
     daysBefore: 0,
     name: "First dojo badge",
     checkCondition: function (coachNumber, dojoNumber) {
-      if (coachData[coachNumber][0] != "" && participationData[coachNumber][dojoNumber] == "y") {
+      if (coachData[coachNumber][0] != "" && participationData[coachNumber][dojoNumber].toLowerCase().indexOf("y") >= 0) {
         var participationCount = 0;
         for (var i = 0; i <= dojoNumber; i++) {
-          if (participationData[coachNumber][i] == "y") participationCount++;
+          if (participationData[coachNumber][i].toLowerCase().indexOf("y") >= 0) participationCount++;
         }
         //coach exists and just attended first dojo
         return participationCount == 1;
@@ -158,10 +158,10 @@ var reminders = [
     daysBefore: 0,
     name: "Aktiv coach badge",
     checkCondition: function (coachNumber, dojoNumber) {
-      if (coachData[coachNumber][0] != "" && participationData[coachNumber][dojoNumber] == "y") {
+      if (coachData[coachNumber][0] != "" && participationData[coachNumber][dojoNumber].toLowerCase().indexOf("y") >= 0) {
         var participationCount = 0;
         for (var i = 0; i <= dojoNumber; i++) {
-          if (participationData[coachNumber][i] == "y") participationCount++;
+          if (participationData[coachNumber][i].toLowerCase().indexOf("y") >= 0) participationCount++;
         }
         //coach exists and just attended first dojo
         return participationCount == 3;
@@ -218,7 +218,6 @@ function checkAndSendReminders() { //Checks if reminders are due and sends if ne
     }
   }
 }
-
 
 function sendReminder(reminder, dojoNumber, dojoDate) {  //Sends out a specific reminder for a given dojo for each coach for which conditions are fulfilled
   var participationData = participationRange.getValues();
