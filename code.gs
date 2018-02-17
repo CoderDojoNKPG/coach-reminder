@@ -20,15 +20,15 @@ function getAnswerReminderMessage(coachName, dojoDate, numberCoaches) {
   var message = "";
   message += "Nu på lördag (" + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + ") är det dags för CoderDojo igen och och det skulle vara jätteroligt att ha med dig som coach! ";
   message += "För tillfället är vi " + numberCoaches + " coacher som är anmälda och vi skulle behöva fler som kan vara med. \n";
-  message += "Om du kan vara med skriver du 'y' i anmälan och om du inte kan vara med skriver du 'n'. Vi behöver ditt svar senast onsdag kl. 17."+ "\n" + "\n";
+  message += "Om du kan vara med skriver du 'y' i anmälningslistan och om du inte kan vara med skriver du 'n'. Vi behöver ditt svar senast onsdag kl. 17."+ "\n" + "\n";
   
   return message;
 }
 
 function getParticipationReminderMessage(coachName, dojoDate, numberCoaches) {
   var message = "";
-  message += "Vi är glada att du är med som coach på dojon imorgon!";
-  message += "Vi kommer totalt att vara " + numberCoaches + " coacher.\n\n";
+  message += "Vi är glada att du är med som coach på dojon imorgon! ";
+  message += "Vi kommer totalt att vara " + numberCoaches + " coacher. Nedan kommer lite praktisk info om dojon.\n\n";
 
   return message;
 }
@@ -153,6 +153,24 @@ var reminders = [
     getMessage: getBadgeMessage,
     getData: function(){return {"badgeCode": badgeCodes["firstDojo"]}},
     messageTitle: "Du har varit med på din första dojo under terminen!"
+  },
+  {
+    daysBefore: 0,
+    name: "Aktiv coach badge",
+    checkCondition: function (coachNumber, dojoNumber) {
+      if (coachData[coachNumber][0] != "" && participationData[coachNumber][dojoNumber] == "y") {
+        var participationCount = 0;
+        for (var i = 0; i <= dojoNumber; i++) {
+          if (participationData[coachNumber][i] == "y") participationCount++;
+        }
+        //coach exists and just attended first dojo
+        return participationCount == 3;
+      }
+    },
+    template: "badgeTemplate",
+    getMessage: getBadgeMessage,
+    getData: function(){return {"badgeCode": badgeCodes["aktivCoach"]}},
+    messageTitle: "Du är nu aktiv coach under den här terminen!"
   }
 ]
 
