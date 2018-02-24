@@ -250,6 +250,10 @@ function sendReminder(reminder, dojoNumber, dojoDate) {  //Sends out a specific 
   }
 }
 
+function testSendMail() {
+  sendMail("mail@nilsbreyer.eu","test", "Title", "hejhej", "reminderTemplate", {daysLeft:1, registrationurl:"Test"});
+}
+
 
 function sendMail(recipient, recipientName, messageTitle, message, template, data) {
   var template = HtmlService.createTemplateFromFile(template);
