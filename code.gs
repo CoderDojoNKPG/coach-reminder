@@ -12,9 +12,12 @@ var reminderStatusRange = sheet.getRange(50, 7, 1, 8); // select the row contain
 
 var operatorEmail = "mail@nilsbreyer.eu"; //This email adress will be notified about errors
 
-var badgeCodes = {
 
-};
+//Badge codes are to be placed in soperate file containing an object badgeCodes (example with fake codes below):
+/*var badgeCodes = {
+  "firstDojo": "24xsbffs",
+  "aktivCoach": "bvgsfw"
+};*/
 
 function getAnswerReminderMessage(coachName, dojoDate, numberCoaches) {
   var message = "";
@@ -269,6 +272,6 @@ function sendMail(recipient, recipientName, messageTitle, message, template, dat
   text += "Hälsningar," + "\n";
   text += "CoderDojo Norrköping" + "\n" + "\n";
   
-  MailApp.sendEmail(recipient, messageTitle + " - Meddelanade från CoderDojo Norrköping", text, {htmlBody: htmlBody});
+  MailApp.sendEmail(recipient, messageTitle + " - Meddelande från CoderDojo Norrköping", text, {htmlBody: htmlBody});
   Logger.log("Reminder sent to " + recipient);
 }

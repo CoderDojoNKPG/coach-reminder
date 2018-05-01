@@ -3,9 +3,9 @@
   <head>
     <base target="_top">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.8">
-	<link rel="stylesheet" type="text/css" href="http://coderdojonkpg.se/style.css"/>
-	<title>CoderDojo Norrköping</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.8">
+    <link rel="stylesheet" type="text/css" href="http://coderdojonkpg.se/style.css"/>
+    <title>CoderDojo Norrköping</title>
     
 <!--Mail specific styles -->
     <style>
@@ -20,13 +20,13 @@ section#intro {
     margin-top: -130px;
     margin-left:auto;
     margin-right:auto;
-	background-color: #C7E2DA; /* extra light */
+    background-color: #C7E2DA; /* extra light */
     
-	transform: translateZ(1000px);
-	transform-style: preserve-3d;
+    transform: translateZ(1000px);
+    transform-style: preserve-3d;
     
     border-radius: 50%;
-	width: 250px;
+    width: 250px;
     height: 250px;
 }
 
@@ -75,13 +75,13 @@ div.large {
   </head>
   <body>
 <header> <!--nav.html is included by script, change in nav.html to change menu-->
-	<a href="http://coderdojonkpg.se/index.html"><img src="http://coderdojonkpg.se/img/icon/logowithtext.png" id="logo"/></a>
+    <a href="http://coderdojonkpg.se/index.html"><img src="http://coderdojonkpg.se/img/icon/logowithtext.png" id="logo"/></a>
 </header>
   <section id="main">
-    <div style="background-image: url(http://coderdojonkpg.se/img/klassrum.jpg);" id="cover">	</div>
+    <div style="background-image: url(http://coderdojonkpg.se/img/klassrum.jpg);" id="cover">   </div>
     
       <section id="intro">
-			<div class="circle"><div class="large"><?= data["daysLeft"] ?></div><div>dag<? if(data["daysLeft"] > 1) { ?>ar<? } ?> kvar till nästa dojo</div></div>
+            <div class="circle"><div class="large"><?= data["daysLeft"] ?></div><div>dag<? if(data["daysLeft"] > 1) { ?>ar<? } ?> kvar till nästa dojo</div></div>
      </section>
      
      <h1>Hej <?= recipientName ?>!</h1>
@@ -93,8 +93,8 @@ div.large {
                 <?= message ?>
             </p>
             <div class="buttons">
-				<a href="<?= data["registrationUrl"] ?>" class="button">Gå till anmälan för coacher</a>
-			</div>
+                <a href="<?= data["registrationUrl"] ?>" class="button">Gå till anmälan för coacher</a>
+            </div>
             <p>
                 Bästa hälsningar,<br/>
                 CoderDojo Norrköping
@@ -108,7 +108,7 @@ div.large {
             <h2>Viktig info om dojon</h2>
 
             <ul>
-                <li>Vi träffas vid entrén till Demola/Coffice (om inget annat har angetts i anmälningslistan), adressen är Laxholmstorget 3</li>
+                <li>Vi träffas vid entrén till inGenious/Coffice (om inget annat har angetts i anmälningslistan), adressen är Laxholmstorget 3</li>
                 <li>Coacherna träffas <b>10:20</b>, det är viktigt att komma i tid så att vi kan förbereda och släppa in deltagarna i tid</li>
                 <li>Skulle du få förhinder är det jätteviktigt att meddela via Facebook eller till nils@coderdojonkpg.se omedelbart så att vi kan försöka hitta en ersättare eller begränsa platserna!</li>
             </ul>
@@ -129,5 +129,6 @@ div.large {
   </section>
   </body>
 </html>
+
 
 
