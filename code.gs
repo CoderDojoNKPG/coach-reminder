@@ -1,14 +1,16 @@
 /* Settings */
 
-var spreadsheet = SpreadsheetApp.openById("1kGyWPTnUEU7JUTkTI9XEnMp8AQE_sMIqokoVn7S6tPQ") //get Anmälan VT18
+var spreadsheet = SpreadsheetApp.openById("137Mw4nkW_2teIvNeJ4B85F3ubYpxncYlZDMvf_wxwzM") //get Anmälan VT19
 var sheet = spreadsheet.getSheetByName("Anmälan"); 
 var link = spreadsheet.getUrl();
 
-var participationRange = sheet.getRange(4, 7, 13, 8); // select the range where participants answer yes/no
-var dateRange = sheet.getRange(1, 7, 1, 8); // select the row containing the dojo dates
-var numberCoachesRange = sheet.getRange(2, 7, 1, 8); // select the row containing the number of coaches per dojo
-var coachRange = sheet.getRange(4, 1, 13, 5); //select the range where coach names and email address is placed
-var reminderStatusRange = sheet.getRange(50, 7, 1, 8); // select the row containing the information if the reminder for the dojo has been sent
+var participationRange = spreadsheet.getRangeByName("participationRange"); // select the range where participants answer yes/no
+var dateRange = spreadsheet.getRangeByName("dateRange"); // select the row containing the dojo dates
+var numberCoachesRange = spreadsheet.getRangeByName("numberCoachesRange"); // select the row containing the number of coaches per dojo
+var coachRange = spreadsheet.getRangeByName("coachRange"); //select the range where coach names and email address is placed
+var reminderStatusRange = spreadsheet.getRangeByName("reminderStatusRange"); // select the row containing the information if the reminder for the dojo has been sent
+var recommendedNumberOfParticipantsRange = spreadsheet.getRangeByName("recommendedNumberOfParticipants"); // recommended number of participants (total and newcomers)
+var coachPropertiesRange = spreadsheet.getRangeByName("coachProperties"); //select the range where coach names and email address is placed
 
 var operatorEmail = "mail@nilsbreyer.eu"; //This email adress will be notified about errors
 
@@ -23,7 +25,7 @@ function getAnswerReminderMessage(coachName, dojoDate, numberCoaches) {
   var message = "";
   message += "Nu på lördag (" + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + ") är det dags för CoderDojo igen och och det skulle vara jätteroligt att ha med dig som coach! ";
   message += "För tillfället är vi " + numberCoaches + " coacher som är anmälda och vi skulle behöva fler som kan vara med. \n";
-  message += "Om du kan vara med skriver du 'y' i anmälningslistan och om du inte kan vara med skriver du 'n'. Vi behöver ditt svar senast onsdag kl. 17."+ "\n" + "\n";
+  message += "Om du kan vara med skriver du 'y' i anmälningslistan och om du inte kan vara med skriver du 'n'. Vi behöver ditt svar allra senast onsdag kl. 17. Ju tidigare du svara desto lättare blir det för oss att planera."+ "\n" + "\n";
   
   return message;
 }
@@ -40,7 +42,7 @@ function getEarlyRegistrationReminderMessage(coachName, dojoDate, numberCoaches)
   var message = "";
   message += "Vi är glada att du har anmält dig som coach till dojon den " + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + "! ";
   message += "Eftersom vi har fått din anmälan mer än en vecka i förväg vill vi be dig att dubbelkolla om du fortfarande kan delta. ";
-  message += "Vänligen kontrollera ditt svar i anmälningslistan senast onsdag kl. 17! \n";
+  message += "Vänligen kontrollera ditt svar i anmälningslistan senast onsdag kl. 17. \n";
   message += "Vi ser fram emot att se dig på dojon!\n";
   
   return message;
@@ -72,6 +74,38 @@ var reminders = [
     messageTitle: "Vad roligt att du är med!"
   },
   {
+    daysBefore: 6,
+    name: "Coach did not answer reminder",
+    checkCondition: function (coachNumber, dojoNumber) {
+      if (numberCoachesData[0][dojoNumber] >= 4) {
+        //don't send if already enough coaches
+        return false;
+      }
+      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4].toLowerCase().indexOf("y") >= 0 && participationData[coachNumber][dojoNumber] == "") {
+        //coach exists, wants to be reminded and has not answered yet
+        return true; 
+      }
+    },
+    template: "reminderTemplate",
+    getMessage: getAnswerReminderMessage,
+    getData: getDojoData,
+    messageTitle: "Kan du vara med på nästa dojo?"
+  },
+  {
+    daysBefore: 5,
+    name: "Status",
+    checkCondition: function (coachNumber, dojoNumber) {
+      if (coachPropertiesData[coachNumber][0].toLowerCase().indexOf("y") >= 0) {
+        //coach is dojoansvarig
+        return true; 
+      }
+    },
+    template: "statusTemplate",
+    getMessage: function(coachName, dojoDate, numberCoaches) {return "Vi är just nu " + numberCoaches + " coacher (inklusive gästcoacher)."},
+    getData: getDojoData,
+    messageTitle: "Info till dig som är coach- eller dojoansvarig"
+  }, 
+  {
     daysBefore: 5,
     name: "Coach did not answer reminder",
     checkCondition: function (coachNumber, dojoNumber) {
@@ -87,13 +121,13 @@ var reminders = [
     template: "reminderTemplate",
     getMessage: getAnswerReminderMessage,
     getData: getDojoData,
-    messageTitle: "Snart är det CoderDojo igen..."
-  },
+    messageTitle: "Vi behöver fler coacher till nästa dojo"
+  }, 
   {
     daysBefore: 4,
     name: "Coach did not answer reminder",
     checkCondition: function (coachNumber, dojoNumber) {
-      if (numberCoachesData[0][dojoNumber] >= 4) {
+      if (numberCoachesData[0][dojoNumber] >= 3) {
         //don't send if already enough coaches
         return false;
       }
@@ -105,13 +139,44 @@ var reminders = [
     template: "reminderTemplate",
     getMessage: getAnswerReminderMessage,
     getData: getDojoData,
-    messageTitle: "Vi saknar dig..."
+    messageTitle: "Vi saknar ditt svar"
   },  
+  {
+    daysBefore: 4,
+    name: "Status",
+    checkCondition: function (coachNumber, dojoNumber) {
+      if (coachPropertiesData[coachNumber][0].toLowerCase().indexOf("y") >= 0) {
+        //coach is dojoansvarig
+        return true; 
+      }
+    },
+    template: "statusTemplate",
+    getMessage: function(coachName, dojoDate, numberCoaches) {return "Vi är just nu " + numberCoaches + " coacher (inklusive gästcoacher)."},
+    getData: getDojoData,
+    messageTitle: "Info till dig som är coach- eller dojoansvarig"
+  }, 
+  {
+    daysBefore: 3,
+    name: "Status",
+    checkCondition: function (coachNumber, dojoNumber) {
+      if (coachPropertiesData[coachNumber][0].toLowerCase().indexOf("y") >= 0) {
+        //coach is dojoansvarig
+        return true; 
+      }
+    },
+    template: "statusTemplate",
+    getMessage: function(coachName, dojoDate, numberCoaches) {return "Vi är just nu " + numberCoaches + " coacher (inklusive gästcoacher)."},
+    getData: getDojoData,
+    messageTitle: "Info till dig som är coach- eller dojoansvarig"
+  }, 
   {
     daysBefore: 3,
     name: "Coach did not answer reminder",
     checkCondition: function (coachNumber, dojoNumber) {
-      if (numberCoachesData[0][dojoNumber] >= 5) {
+      var newcomerSpaces = recommendedNumberOfParticipantsRange.getValues()[0][dojoNumber];
+      var advancedSpaces = recommendedNumberOfParticipantsRange.getValues()[0][dojoNumber]
+
+      if (newcomerSpaces >= 9 && advancedSpaces >= 24) {
         //don't send if already enough coaches
         return false;
       }
@@ -123,7 +188,7 @@ var reminders = [
     template: "reminderTemplate",
     getMessage: getAnswerReminderMessage,
     getData: getDojoData,
-    messageTitle: "Vi behöver dig..."
+    messageTitle: "Vi behöver din hjälp på nästa dojo 😥"
   },
   {
     daysBefore: 1,
@@ -185,12 +250,15 @@ var reminders = [
 
 var participationData = participationRange.getValues();
 var coachData = coachRange.getValues();
+var coachPropertiesData = coachPropertiesRange.getValues();
 var numberCoachesData = numberCoachesRange.getValues();
 
 function getDojoData(dojoNumber, dojoDate, coachNumber) {
   var data = {
               "daysLeft": getNumberOfDaysBetween(new Date(), new Date(dojoDate.getTime())),
-              "registrationUrl": link
+              "registrationUrl": link,
+    "recommendedNumberOfParticipants": recommendedNumberOfParticipantsRange.getValues()[0][dojoNumber],
+    "recommendedNumberOfNewcomers": recommendedNumberOfParticipantsRange.getValues()[1][dojoNumber]
              };
   return data;
 }
@@ -254,7 +322,7 @@ function sendReminder(reminder, dojoNumber, dojoDate) {  //Sends out a specific 
 }
 
 function testSendMail() {
-  sendMail("mail@nilsbreyer.eu","test", "Title", "hejhej", "reminderTemplate", {daysLeft:1, registrationurl:"Test"});
+  sendMail(operatorEmail,"test", "Title", "hejhej", "reminderTemplate", {daysLeft:1, registrationurl:"Test"});
 }
 
 

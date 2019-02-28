@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+     <h1>Hej <?= recipientName ?>!</h1>
+     <section class="blocks">
+         <article>
+            <h2><?= messageTitle ?></h2>
+            
+            <p>
+                <i>
+                <? if(data["daysLeft"] <= 6) {?>Det är bara <?}?><span class="large"><?= data["daysLeft"] ?> </span> <span>dag<? if(data["daysLeft"] > 1) { ?>ar<? } ?> kvar till nästa dojo.</span>
+                </i>
+            </p>
+            <p>
+                <?= message ?>
+            </p>
+            <ul>
+            <li>Rekommenderat max antal deltagare: <?= data["recommendedNumberOfParticipants"] ?></li>
+            <li>Rekommenderat max antal nybörjare: <?= data["recommendedNumberOfNewcomers"] ?></li>
+            </ul>
+            <div class="buttons">
+                <a href="<?= data["registrationUrl"] ?>" class="button">Gå till anmälan för coacher</a>
+            </div>
+            <p>
+                Bästa hälsningar,<br/>
+                CoderDojo Norrköping
+            </p>
+         </article>
+     </section>
+
+     <br/>
+     <section class="blocks">
+        <article>
+            <h2>Info om att sätta platserna</h2>
+
+            <ul>
+                <li><a href="https://docs.google.com/document/d/1fDoDkiv9Pk9etFLyivi0xVAi4dUK46sL7vqxSFG4zEs">Guide till eventbrite</a></li>
+                <li>Om du ökar platserna, kolla om det står någon på väntelistan (Order options->Manage Waitlist) och släpp platserna till dem.</li>
+            </ul>
+        </article>
+     </section>
+ 
+</body>
+</html>
+
