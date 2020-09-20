@@ -1,6 +1,5 @@
 /* Settings */
-
-var spreadsheet = SpreadsheetApp.openById("137Mw4nkW_2teIvNeJ4B85F3ubYpxncYlZDMvf_wxwzM") //get Anmälan VT19
+var spreadsheet = SpreadsheetApp.openById("1WCmgjUE2EJihDMzRbyKdNVTiP0g6Yle2-BCsGmLwoAc") //get Anmälan HT19
 var sheet = spreadsheet.getSheetByName("Anmälan"); 
 var link = spreadsheet.getUrl();
 
@@ -23,9 +22,10 @@ var operatorEmail = "mail@nilsbreyer.eu"; //This email adress will be notified a
 
 function getAnswerReminderMessage(coachName, dojoDate, numberCoaches) {
   var message = "";
-  message += "Nu på lördag (" + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + ") är det dags för CoderDojo igen och och det skulle vara jätteroligt att ha med dig som coach! ";
+  message += "På lördag den " + dojoDate.getDate() + "/" + (dojoDate.getMonth()+1) + " är det dags för CoderDojo igen och och det skulle vara jätteroligt att ha med dig som coach! ";
   message += "För tillfället är vi " + numberCoaches + " coacher som är anmälda och vi skulle behöva fler som kan vara med. \n";
-  message += "Om du kan vara med skriver du 'y' i anmälningslistan och om du inte kan vara med skriver du 'n'. Vi behöver ditt svar allra senast onsdag kl. 17. Ju tidigare du svara desto lättare blir det för oss att planera."+ "\n" + "\n";
+  message += "Om du kan vara med skriver du 'y' i anmälningslistan och om du inte kan vara med skriver du 'n'.";
+  message += "Vi ditt svar allra senast onsdagen innan dojon kl. 17, men helst en vecka innan dojo. Ju tidigare du svara desto lättare blir det för oss att planera antal platser."+ "\n" + "\n";
   
   return message;
 }
@@ -60,7 +60,7 @@ function getBadgeMessage(coachName, dojoDate, numberCoaches) {
 
 var reminders = [
   {
-    daysBefore: 7,
+    daysBefore: 12,
     name: "Early registration reminder",
     checkCondition: function (coachNumber, dojoNumber) {
       if (coachData[coachNumber][0] != "" && coachData[coachNumber][4].toLowerCase().indexOf("y") >= 0 && participationData[coachNumber][dojoNumber].toLowerCase().indexOf("y") >= 0) {
@@ -74,7 +74,7 @@ var reminders = [
     messageTitle: "Vad roligt att du är med!"
   },
   {
-    daysBefore: 6,
+    daysBefore: 10,
     name: "Coach did not answer reminder",
     checkCondition: function (coachNumber, dojoNumber) {
       if (numberCoachesData[0][dojoNumber] >= 4) {
@@ -92,7 +92,7 @@ var reminders = [
     messageTitle: "Kan du vara med på nästa dojo?"
   },
   {
-    daysBefore: 5,
+    daysBefore: 6,
     name: "Status",
     checkCondition: function (coachNumber, dojoNumber) {
       if (coachPropertiesData[coachNumber][0].toLowerCase().indexOf("y") >= 0) {
@@ -103,10 +103,10 @@ var reminders = [
     template: "statusTemplate",
     getMessage: function(coachName, dojoDate, numberCoaches) {return "Vi är just nu " + numberCoaches + " coacher (inklusive gästcoacher)."},
     getData: getDojoData,
-    messageTitle: "Info till dig som är coach- eller dojoansvarig"
+    messageTitle: "Info till dig som är coach- eller dojoansvarig inför släpp av anmälan"
   }, 
   {
-    daysBefore: 5,
+    daysBefore: 6,
     name: "Coach did not answer reminder",
     checkCondition: function (coachNumber, dojoNumber) {
       if (numberCoachesData[0][dojoNumber] >= 2) {
@@ -203,8 +203,8 @@ var reminders = [
     getMessage: getParticipationReminderMessage,
     getData: getDojoData,
     messageTitle: "Vi ses imorgon!"
-  },
-  {
+  }//,
+  /*{
     daysBefore: 0,
     name: "First dojo badge",
     checkCondition: function (coachNumber, dojoNumber) {
@@ -239,7 +239,7 @@ var reminders = [
     getMessage: getBadgeMessage,
     getData: function(){return {"badgeCode": badgeCodes["aktivCoach"]}},
     messageTitle: "Du är nu aktiv coach under den här terminen!"
-  }
+  }*/
 ]
 
 
@@ -272,6 +272,10 @@ function checkAndSendReminders() { //Checks if reminders are due and sends if ne
   var dates = dateRange.getValues()[0];
 
   for (var j = 0; j < dates.length; j++) {
+    if (dates[j] == "") {
+      continue; //skip if dojo has no date yet
+    }
+    
     var daysLeft = getNumberOfDaysBetween(new Date(), new Date(dates[j].getTime()));
     var reminderStatus = reminderStatusRange.getValues();
     
