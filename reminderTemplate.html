@@ -15,8 +15,25 @@
                 <?= message ?>
             </p>
             <div class="buttons">
-				<a href="<?= data["registrationUrl"] ?>" class="button">Gå till anmälan för coacher</a>
-			</div>
+				      <a href="<?= data["registrationUrl"] ?>" class="button">Gå till anmälan för coacher</a>
+			      </div>
+
+            <? if (data["statistics"] != null) { ?>
+              <p>Aktuell anmälningsstatistik från Eventbrite:</p>
+              <table style="vertical-align: top;">
+                <tr>
+                  <th>Antal</th>
+                  <th>Grupp</th>
+                </tr>
+                <? for (const grupp of data["statistics"]) { ?>
+                <tr>
+                  <td style="vertical-align: top;"><?= grupp.quantity_sold ?></td>
+                  <td style="vertical-align: top;"><?= grupp.name ?></td>
+                </tr>
+                <? } ?>
+              </table>
+            <? } ?>
+            
             <p>
                 Bästa hälsningar,<br/>
                 CoderDojo Norrköping

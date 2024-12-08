@@ -20,8 +20,8 @@
             </ul>
 
             <? if (data["statistics"] != null) { ?>
-              <p>Anmälningsstatistik från Eventbrite:</p>
-              <table>
+              <p>Aktuell anmälningsstatistik från Eventbrite:</p>
+              <table style="vertical-align: top;">
                 <tr>
                   <th>Antal</th>
                   <th>Grupp</th>
@@ -29,9 +29,9 @@
                 </tr>
                 <? for (const grupp of data["statistics"]) { ?>
                 <tr>
-                  <td><?= grupp.quantity_sold ?></td>
-                  <td><?= grupp.name ?></td>
-                  <td>
+                  <td style="vertical-align: top;"><?= grupp.quantity_sold ?></td>
+                  <td style="vertical-align: top;"><?= grupp.name ?></td>
+                  <td style="vertical-align: top;">
                       <? for (const question of grupp["questions"]) { ?>
                         <? if(Object.keys(question.answers).length <=3 && question.question_text !=="Genus") { ?> <!--include only questions with max 2 answers and not genus-->
                           <i><?= question.question_text ?></i><br/>
@@ -45,6 +45,7 @@
                                 <? } ?>
                               <? } ?>
                             </table>
+                            <br/>
                         <? } ?>
                       <? } ?>
                   </td>
