@@ -21,27 +21,36 @@
 
             <? if (data["statistics"] != null) { ?>
               <p>Anmälningsstatistik från Eventbrite:</p>
-              <ul>
-              <? for (const grupp of data["statistics"]) { ?>
-                <li><?= grupp.name ?>: <?= grupp.quantity_sold ?>
-                  <ul>
-                    <? for (const question of grupp["questions"]) { ?>
-                      <? if(Object.keys(question.answers).length <=3) { ?> <!--include only questions with max 2 answers-->
-                        <li><?= question.question_text ?>
-                          <ul>
-                            <? for (const [answer, count] of Object.entries(question["answers"])) { ?>
-                              <? if(answer!=="undefined") { ?>
-                                <li><?= answer ?>: <?= count ?>
+              <table>
+                <tr>
+                  <th>Antal</th>
+                  <th>Grupp</th>
+                  <th>Detaljer</th>
+                </tr>
+                <? for (const grupp of data["statistics"]) { ?>
+                <tr>
+                  <td><?= grupp.quantity_sold ?></td>
+                  <td><?= grupp.name ?></td>
+                  <td>
+                    <ul>
+                      <? for (const question of grupp["questions"]) { ?>
+                        <? if(Object.keys(question.answers).length <=3 && question.question_text !=="Genus") { ?> <!--include only questions with max 2 answers and not genus-->
+                          <li><?= question.question_text ?>
+                            <ul>
+                              <? for (const [answer, count] of Object.entries(question["answers"])) { ?>
+                                <? if(answer!=="undefined") { ?>
+                                  <li><?= answer ?>: <?= count ?>
+                                <? } ?>
                               <? } ?>
-                            <? } ?>
-                          </ul>
-                        </li>
+                            </ul>
+                          </li>
+                        <? } ?>
                       <? } ?>
-                    <? } ?>
-                  </ul>
-                </li>
-              <? } ?>
-              </ul>
+                    </ul>
+                  </td>
+                </tr>
+                <? } ?>
+              </table>
             <? } else  { ?>
               <p>Anmälan för deltagare har inte skapats på Eventbrite än eller kunde inte hittas..</p>
             <? } ?>
