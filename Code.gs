@@ -203,7 +203,22 @@ var reminders = [
     getMessage: getParticipationReminderMessage,
     getData: getDojoData,
     messageTitle: "Vi ses imorgon!"
-  }//,
+  },
+  {
+    daysBefore: -1,
+    name: "Status",
+    checkCondition: function (coachNumber, dojoNumber) {
+      if (coachPropertiesData[coachNumber][0].toLowerCase().indexOf("y") >= 0) {
+        //coach is dojoansvarig
+        return true; 
+      }
+    },
+    template: "statusTemplate",
+    getMessage: function(coachName, dojoDate, numberCoaches) {return "Vi är just nu " + numberCoaches + " coacher (inklusive gästcoacher)."},
+    getData: getDojoData,
+    messageTitle: "TEST"
+  }
+  //,
   /*{
     daysBefore: 0,
     name: "First dojo badge",
@@ -257,8 +272,8 @@ function getDojoData(dojoNumber, dojoDate, coachNumber) {
   var data = {
               "daysLeft": getNumberOfDaysBetween(new Date(), new Date(dojoDate.getTime())),
               "registrationUrl": link,
-    "recommendedNumberOfParticipants": recommendedNumberOfParticipantsRange.getValues()[0][dojoNumber],
-    "recommendedNumberOfNewcomers": recommendedNumberOfParticipantsRange.getValues()[1][dojoNumber]
+              "recommendedNumberOfParticipants": recommendedNumberOfParticipantsRange.getValues()[0][dojoNumber],
+              "recommendedNumberOfNewcomers": recommendedNumberOfParticipantsRange.getValues()[1][dojoNumber]
              };
 
   try {
@@ -287,7 +302,7 @@ function checkAndSendReminders() { //Checks if reminders are due and sends if ne
     var daysLeft = getNumberOfDaysBetween(new Date(), new Date(dates[j].getTime()));
     var reminderStatus = reminderStatusRange.getValues();
     
-    if ((reminderStatusRange.getCell(0+1,j+1).isBlank()) || (reminderStatus[0][j] > Math.max(daysLeft,0))) {
+    if (reminderStatus[0][j] != daysLeft) { //reminders not yet processed today
       //dojo is in future and reminders for current day have not been processed yet
       for (var r = 0; r < reminders.length; r++) {
         if (reminders[r].daysBefore == daysLeft) {
