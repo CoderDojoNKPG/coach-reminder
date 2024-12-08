@@ -7,7 +7,7 @@ function test_stats() {
 
 function get_event(date) {
   // Format date as YYYY-MM-DD for Eventbrite API
-  const formattedDate = Utilities.formatDate(date, 'UTC', 'yyyy-MM-dd');
+  const formattedDate = Utilities.formatDate(date, 'GMT+1', 'yyyy-MM-dd');
   
   // First, get the organization ID
   const userUrl = 'https://www.eventbriteapi.com/v3/users/me/organizations/';
@@ -48,7 +48,7 @@ function get_event(date) {
     
     return data.events && data.events.length > 0 ? data.events[0] : null;
   } catch (error) {
-    Logger.log('Error fetching event: ' + error.toString());
+    Logger.log('Error fetching event for date ' + formattedDate + ': ' + error.toString());
     return null;
   }
 }

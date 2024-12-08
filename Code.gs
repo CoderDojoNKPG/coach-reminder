@@ -277,10 +277,10 @@ function getDojoData(dojoNumber, dojoDate, coachNumber) {
              };
 
   try {
-    event_id = get_event(new Date(dojoDate)).id;
+    event_id = get_event(dojoDate).id;
     data.statistics = get_statistics(event_id);
   } catch (e) {
-    //ignore
+    Logger.log(e);
   }
 
   return data;

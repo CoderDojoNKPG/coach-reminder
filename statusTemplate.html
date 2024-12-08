@@ -18,6 +18,34 @@
             <li>Rekommenderat max antal deltagare: <?= data["recommendedNumberOfParticipants"] ?></li>
             <li>Rekommenderat max antal nybörjare: <?= data["recommendedNumberOfNewcomers"] ?></li>
             </ul>
+
+            <? if (data["statistics"] != null) { ?>
+              <p>Anmälningsstatistik från Eventbrite:</p>
+              <ul>
+              <? for (const grupp of data["statistics"]) { ?>
+                <li><?= grupp.name ?>: <?= grupp.quantity_sold ?>
+                  <ul>
+                    <? for (const question of grupp["questions"]) { ?>
+                      <? if(Object.keys(question.answers).length <=3) { ?> <!--include only questions with max 2 answers-->
+                        <li><?= question.question_text ?>
+                          <ul>
+                            <? for (const [answer, count] of Object.entries(question["answers"])) { ?>
+                              <? if(answer!=="undefined") { ?>
+                                <li><?= answer ?>: <?= count ?>
+                              <? } ?>
+                            <? } ?>
+                          </ul>
+                        </li>
+                      <? } ?>
+                    <? } ?>
+                  </ul>
+                </li>
+              <? } ?>
+              </ul>
+            <? } else  { ?>
+              <p>Anmälan för deltagare har inte skapats på Eventbrite än eller kunde inte hittas..</p>
+            <? } ?>
+
             <div class="buttons">
 				<a href="<?= data["registrationUrl"] ?>" class="button">Gå till anmälan för coacher</a>
 			</div>
