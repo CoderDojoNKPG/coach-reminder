@@ -1,4 +1,4 @@
-function myFunction() {
+function test_stats() {
   event = get_event(new Date("2024-12-07"))
   Logger.log(event)
   stats = get_statistics(event.id)
