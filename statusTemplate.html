@@ -32,21 +32,21 @@
                   <td><?= grupp.quantity_sold ?></td>
                   <td><?= grupp.name ?></td>
                   <td>
-                    <ul>
                       <? for (const question of grupp["questions"]) { ?>
                         <? if(Object.keys(question.answers).length <=3 && question.question_text !=="Genus") { ?> <!--include only questions with max 2 answers and not genus-->
-                          <li><?= question.question_text ?>
-                            <ul>
+                          <i><?= question.question_text ?></i><br/>
+                            <table>
                               <? for (const [answer, count] of Object.entries(question["answers"])) { ?>
                                 <? if(answer!=="undefined") { ?>
-                                  <li><?= answer ?>: <?= count ?>
+                                  <tr>
+                                    <td><?= count ?></td>
+                                    <td><?= answer ?></td>
+                                  </tr>
                                 <? } ?>
                               <? } ?>
-                            </ul>
-                          </li>
+                            </table>
                         <? } ?>
                       <? } ?>
-                    </ul>
                   </td>
                 </tr>
                 <? } ?>
