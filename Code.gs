@@ -260,6 +260,14 @@ function getDojoData(dojoNumber, dojoDate, coachNumber) {
     "recommendedNumberOfParticipants": recommendedNumberOfParticipantsRange.getValues()[0][dojoNumber],
     "recommendedNumberOfNewcomers": recommendedNumberOfParticipantsRange.getValues()[1][dojoNumber]
              };
+
+  try {
+    event_id = get_event(new Date(dojoDate)).id;
+    data.statistics = get_statistics(event_id);
+  } catch (e) {
+    //ignore
+  }
+
   return data;
 }
 
