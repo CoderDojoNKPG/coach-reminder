@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<body>
+     <h1>Hej <?= recipientName ?>!</h1>
+     <section class="blocks">
+         <article>
+            <h2><?= messageTitle ?></h2>
+            
+            <p>
+              Här kommer översikten för dagens dojo.
+            </p>
+
+            <p>
+                <?= message ?>
+            </p>
+
+            <? if (data["statistics"] != null) { ?>
+              <p>Anmälningsstatistik från Eventbrite:</p>
+              <table style="vertical-align: top;">
+                <tr>
+                  <th>Antal</th>
+                  <th>Grupp</th>
+                  <th>Detaljer</th>
+                </tr>
+                <? for (const grupp of data["statistics"]) { ?>
+                <tr>
+                  <td style="vertical-align: top;"><?= grupp.quantity_sold ?></td>
+                  <td style="vertical-align: top;"><?= grupp.name ?></td>
+                  <td style="vertical-align: top;">
+                      <? for (const question of grupp["questions"]) { ?>
+                        <? if(Object.keys(question.answers).length <=3 && question.question_text !=="Genus") { ?> <!--include only questions with max 2 answers and not genus-->
+                          <i><?= question.question_text ?></i><br/>
+                            <table>
+                              <? for (const [answer, count] of Object.entries(question["answers"])) { ?>
+                                <? if(answer!=="undefined") { ?>
+                                  <tr>
+                                    <td><?= count ?></td>
+                                    <td><?= answer ?></td>
+                                  </tr>
+                                <? } ?>
+                              <? } ?>
+                            </table>
+                            <br/>
+                        <? } ?>
+                      <? } ?>
+                  </td>
+                </tr>
+                <? } ?>
+              </table>
+            <? } else  { ?>
+              <p>Anmälan för deltagare har inte skapats på Eventbrite än eller kunde inte hittas..</p>
+            <? } ?>
+
+            <div class="buttons">
+				<a href="<?= data["registrationUrl"] ?>" class="button">Gå till anmälan för coacher</a>
+			</div>
+            <p>
+                Bästa hälsningar,<br/>
+                CoderDojo Norrköping
+            </p>
+         </article>
+     </section>
+
+     <br/>
+     <section class="blocks">
+        <article> 
+            <h2>Viktig info om dojon</h2>
+            <ul>
+                <li>Om du blir sjuk eller får förhinder är det jätteviktigt att meddela via Messenger eller till alex@coderdojonkpg.se. Detta är extra viktigt när det är få coacher!</li>
+                <li>Vi träffas vid entrén till Coffice (om inget annat har angetts i anmälningslistan), adressen är Laxholmstorget 3</li>
+                <li>Coacherna träffas <b>10:15</b> så att vi kan förbereda och släppa in deltagarna i tid</li>
+            </ul>
+        </article>
+     </section>
+     
+     <footer>
+        <article>
+            Du får denna påminnelse eftersom du är registrerad som coach. Vill du inte få påminnelser i framtiden skriver du 'n' i kolumnen 'Påminn?' efter ditt namn.
+        </article>
+    </footer>
+</body>
+</html>

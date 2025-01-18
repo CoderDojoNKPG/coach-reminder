@@ -203,6 +203,20 @@ var reminders = [
     getMessage: getParticipationReminderMessage,
     getData: getDojoData,
     messageTitle: "Vi ses imorgon!"
+  },
+  {
+    daysBefore: 0,
+    name: "Dojo overview",
+    checkCondition: function (coachNumber, dojoNumber) {
+      if (coachData[coachNumber][0] != "" && coachData[coachNumber][4].toLowerCase().indexOf("y") >= 0 && participationData[coachNumber][dojoNumber].toLowerCase().indexOf("y") >= 0) {
+        //coach exists, wants to be reminded and has signed up for dojo
+        return true;
+      }
+    },
+    template: "dojoTemplate",
+    getMessage: function(coachName, dojoDate, numberCoaches) {return "Vi är idag " + numberCoaches + " coacher (inklusive gästcoacher)."},
+    getData: getDojoData,
+    messageTitle: "Info till dig som är med på dagens dojo"
   }
   //,
   /*{
