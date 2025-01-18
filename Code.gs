@@ -1,5 +1,5 @@
 /* Settings */
-var spreadsheet = SpreadsheetApp.openById("1QBxOkjOomioyuBuABEHcQwXLFBUMmY-SrrKKK11uUuc") //document ID for Anmälan
+var spreadsheet = SpreadsheetApp.openById("1yUpmQU9Z_aK_9Oa_Dh7E8oa21Nf34Yfu17t20cK2fTg") //document ID for Anmälan
 var sheet = spreadsheet.getSheetByName("Anmälan"); 
 var link = spreadsheet.getUrl();
 
