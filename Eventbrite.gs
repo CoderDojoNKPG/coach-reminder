@@ -1,5 +1,8 @@
 function test_stats() {
-  event = get_event(new Date("2025-04-26"))
+  var dates = dateRange.getValues()[0];
+  date = dates[7]
+  event = get_event(date) //new Date("2025-04-26")
+  Logger.log(new Date("2025-04-26"))
   Logger.log(event)
   stats = get_statistics(event.id)
   Logger.log(stats)
@@ -7,7 +10,7 @@ function test_stats() {
 
 function get_event(date) {
   // Format date as YYYY-MM-DD for Eventbrite API
-  const formattedDate = Utilities.formatDate(date, 'GMT+1', 'yyyy-MM-dd');
+  const formattedDate = Utilities.formatDate(date, 'GMT+2', 'yyyy-MM-dd');
   
   // First, get the organization ID
   const userUrl = 'https://www.eventbriteapi.com/v3/users/me/organizations/';
