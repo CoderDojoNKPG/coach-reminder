@@ -1,5 +1,5 @@
 function test_stats() {
-  event = get_event(new Date("2024-12-07"))
+  event = get_event(new Date("2025-04-26"))
   Logger.log(event)
   stats = get_statistics(event.id)
   Logger.log(stats)
